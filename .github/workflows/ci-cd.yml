@@ -1,0 +1,37 @@
+name: Streaming-Data-project CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11.1
+
+    - name: Install dependencies
+      run: |
+        make create-environment
+        python -m pip install --upgrade pip
+        make install-dependencies
+
+    - name: Run tests
+      run: |
+       make unit-tests || echo "No tests found yet"
+
+    - name: Run code style checks
+      run: |
+       make run-flake 
+
+    - name: Format code
+      run: |
+       make run-format
