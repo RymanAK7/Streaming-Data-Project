@@ -23,6 +23,7 @@ def retrieve_api_key(secret_name: str) -> str:
         secrets_manager = boto3.client("secretsmanager")
         logger.info('Attempting to retrieve Guardian API Key')
         response = secrets_manager.get_secret_value(SecretId=secret_name)
+
     except ClientError as e:
         error_code = e.response['Error']['Code']
         if error_code == "ResourceNotFoundException":
@@ -52,10 +53,3 @@ def retrieve_api_key(secret_name: str) -> str:
         logger.error("SecretString not found in the response.")
         raise ValueError("SecretString not found in the response.")
     return secret
-
-
-try:
-    secret_name = "guardian/api-key"
-    api_key = retrieve_api_key(secret_name=secret_name)
-except Exception as e:
-    logger.error(f"Error occurred: {str(e)}")
