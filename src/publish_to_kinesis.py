@@ -9,7 +9,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def publish_to_kinesis(stream_name: str, list_articles: List[Dict]) -> str:
+def publish_to_kinesis(stream_name: str, partition_key: str,
+                       list_articles: List[Dict]) -> str:
     """
     Publish a list of articles to a Kinesis stream.
 
@@ -31,12 +32,12 @@ def publish_to_kinesis(stream_name: str, list_articles: List[Dict]) -> str:
 
         for article in list_articles:
             # Convert article to JSON string
-            article_json = json.dumps(article)
+            article_json = json.dumps(article, indent=4, ensure_ascii=False)
             response = kinesis_client.put_record(
                 StreamName=stream_name,
                 Data=article_json.encode('utf-8'),  # Encode data to bytes
-                # Use webTitle as the partition key
-                PartitionKey=article.get('webTitle'),
+                # Use search_term as the partition key
+                PartitionKey=partition_key,
             )
             if response['ResponseMetadata']['HTTPStatusCode'] == 200:
                 success_count += 1
