@@ -21,7 +21,7 @@ def retrieve_api_key(secret_name: str) -> str:
     logger.info('Interacting with AWS Secretsmanager')
     try:
         secrets_manager = boto3.client("secretsmanager")
-        logger.info('Attempting to retrieve Guardian API Key')
+        logger.info('Attempting to retrieve Guardian API Key.')
         response = secrets_manager.get_secret_value(SecretId=secret_name)
 
     except ClientError as e:
@@ -48,7 +48,7 @@ def retrieve_api_key(secret_name: str) -> str:
         raise e
     secret = response['SecretString']
     if secret:
-        logger.info('Successfully retreieved the secret string.')
+        logger.info('Successfully retreieved the API Key.')
     else:
         logger.error("SecretString not found in the response.")
         raise ValueError("SecretString not found in the response.")
