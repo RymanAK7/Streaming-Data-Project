@@ -49,9 +49,9 @@ def test_publish_to_kinesis_adds_all_articles_to_stream(aws_kinesis):
     adds all articles to the stream successfully
     and verfies the records in the stream.
     """
-
+    partition_key = 'test-search'
     stream_name = "test_stream"
-    output = publish_to_kinesis(stream_name, articles)
+    output = publish_to_kinesis(stream_name, partition_key, articles)
 
     assert output == (
         f"Successfully added all {len(articles)} records "
@@ -78,21 +78,23 @@ def test_publish_to_kinesis_no_records_added_failure(aws_kinesis):
     """Test that publish_to_kinesis function
     handles failure when no articles are added."""
     stream_name = "test_stream"
-    output = publish_to_kinesis(stream_name, [])
-    assert "Failed to add any records" in output
+    output = publish_to_kinesis(stream_name, "test_search", [])
+    assert output == (
+        f"Failed to add any records to Kinesis stream: {stream_name}"
+    )
 
 
 def test_publish_to_kinesis_invalid_input():
     """Test that publish_to_kinesis function
     raises an exception for invalid input."""
     with pytest.raises(Exception):
-        publish_to_kinesis("test_stream", None)
+        publish_to_kinesis("test_stream", "test_search", None)
 
 
 def test_publish_to_kinesis_Client_Error(aws_kinesis):
     """Test handling of ClientError."""
     with pytest.raises(ClientError):
-        publish_to_kinesis("non_existent_stream", articles)
+        publish_to_kinesis("non_existent_stream", "test_search", articles)
 
 
 @patch('boto3.client')
@@ -102,7 +104,7 @@ def test_publish_to_kinesis_partial_credentials_error(mock_boto_client):
         provider='aws', cred_var='test_var')
 
     with pytest.raises(PartialCredentialsError):
-        publish_to_kinesis("test_stream", articles)
+        publish_to_kinesis("test_stream", "test_search", articles)
 
 
 @patch('boto3.client')
@@ -110,4 +112,4 @@ def test_publish_to_kinesis_no_credentials_error(mock_boto_client):
     """Test handling of NoCredentialsError."""
     mock_boto_client.side_effect = NoCredentialsError()
     with pytest.raises(NoCredentialsError):
-        publish_to_kinesis("test_stream", articles)
+        publish_to_kinesis("test_stream", "test_search", articles)
