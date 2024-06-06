@@ -33,10 +33,12 @@ def retrieve_articles(search_terms: str, from_date: str = None) -> list:
             'q': search_terms,
             'api-key': retrieve_api_key('guardian/api-key'),
         }
-        logger.info(f'Making a request to the Guardian API.')
+        logger.info('Making a request to the Guardian API.')
         base_url = "http://content.guardianapis.com/search"
-        params = f"from-date={from_date}&" if from_date else ""
-        logger.info(f'Request URL: {base_url}?{params}order-by=relevance&q={search_terms}')
+        params = f'order-by=relevance&q={search_terms}'
+        if from_date:
+            params = f'from-date={from_date}&{params}'
+        logger.info(f'Request URL: {base_url}?{params}')
         response = requests.get(url, params=my_params)
         data = response.json()
         if response.status_code == 200:
