@@ -1,6 +1,6 @@
 import requests
-from src.retrieve_api_key import retrieve_api_key
-from src.fetch_article_content import fetch_content_preview
+from retrieve_api_key import retrieve_api_key
+from fetch_article_content import fetch_content_preview
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -29,16 +29,16 @@ def retrieve_articles(search_terms: str, from_date: str = None) -> list:
         url = 'http://content.guardianapis.com/search'
         my_params = {
             'from-date': from_date,
-            'api-key': retrieve_api_key('guardian/api-key'),
             'order-by': 'relevance',
-            'q': search_terms
+            'q': search_terms,
+            'api-key': retrieve_api_key('guardian/api-key'),
         }
-        logger.info('Making a request to the Guardian API')
+        logger.info(f'Making a request to the Guardian API.')
+        base_url = "http://content.guardianapis.com/search"
+        params = f"from-date={from_date}&" if from_date else ""
+        logger.info(f'Request URL: {base_url}?{params}order-by=relevance&q={search_terms}')
         response = requests.get(url, params=my_params)
-        logger.info(f'Request URL: {response.url}')
         data = response.json()
-        print(response)
-        print(data)
         if response.status_code == 200:
             logger.info('Request was successful')
             article_hits_info = []
