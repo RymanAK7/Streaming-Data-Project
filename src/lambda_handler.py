@@ -1,10 +1,11 @@
-from retrieve_articles import retrieve_articles
-from publish_to_kinesis import publish_to_kinesis
+from src.retrieve_articles import retrieve_articles
+from src.publish_to_kinesis import publish_to_kinesis
 import logging
 import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 def lambda_handler(event, context):
     """
@@ -40,10 +41,3 @@ def lambda_handler(event, context):
             "statusCode": 500,
             "body": json.dumps({'error': str(e)}),
         }
-
-print(lambda_handler({
-    'queryStringParameters':{
-        'kinesis_stream':'testhgf',
-        'search_term':'ch'
-    }
-},''))
