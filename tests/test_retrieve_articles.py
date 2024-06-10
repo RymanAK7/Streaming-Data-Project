@@ -20,7 +20,6 @@ class TestRetrieveArticles(unittest.TestCase):
         It checks that the function correctly processes the response and
         returns the expected list of articles.
         """
-        # Mocking requests.get
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
@@ -33,19 +32,15 @@ class TestRetrieveArticles(unittest.TestCase):
             }
         }
 
-        # Patching requests.get with mock_response
         mock_get.return_value = mock_response
 
-        # Mocking fetch_content_preview
         with patch(
             'src.retrieve_articles.fetch_content_preview'
         ) as mock_fetch_content_preview:
             mock_fetch_content_preview.return_value = 'test_content_preview'
 
-            # Call the function under test
             articles = retrieve_articles('TEST')
 
-        # Assertions
         self.assertEqual(len(articles), 1)
         self.assertEqual(articles[0]['webUrl'], 'test_url')
         self.assertEqual(articles[0]['webPublicationDate'], 'test_date')
@@ -53,9 +48,6 @@ class TestRetrieveArticles(unittest.TestCase):
         self.assertEqual(
             articles[0]['contentPreview'],
             'test_content_preview...')
-
-    # Write more test cases for other scenarios (e.g., unsuccessful request,
-    # exceptions, etc.)
 
     @patch('src.retrieve_articles.requests.get')
     @patch('src.retrieve_articles.retrieve_api_key',
@@ -72,7 +64,6 @@ class TestRetrieveArticles(unittest.TestCase):
         It checks that the function raises
         an APIRequestError in response to a 404 status code.
         """
-        # Mocking requests.get
         mock_response = Mock()
         mock_response.status_code = 404
         mock_response.json.return_value = {
@@ -92,7 +83,6 @@ class TestRetrieveArticles(unittest.TestCase):
             self, mock_retrieve_api_key, mock_get):
         """Test retrieve_articles for a successful
         API request with multiple articles."""
-        # Mocking requests.get
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
@@ -108,10 +98,8 @@ class TestRetrieveArticles(unittest.TestCase):
             }
         }
 
-        # Patching requests.get with mock_response
         mock_get.return_value = mock_response
 
-        # Mocking fetch_content_preview
         with patch(
             'src.retrieve_articles.fetch_content_preview'
         ) as mock_fetch_content_preview:
@@ -120,10 +108,8 @@ class TestRetrieveArticles(unittest.TestCase):
                 'test_content_preview_2'
             ]
 
-            # Call the function under test
             articles = retrieve_articles('TEST', '2024-05-01')
 
-        # Assertions
         self.assertEqual(len(articles), 2)
         self.assertEqual(articles[0]['webUrl'], 'test_url_1')
         self.assertEqual(articles[0]['webPublicationDate'], 'test_date_1')
@@ -143,7 +129,6 @@ class TestRetrieveArticles(unittest.TestCase):
            return_value='dummy_api_key')
     def test_empty_results(self, mock_retrieve_api_key, mock_get):
         """Test retrieve_articles when the API returns no articles."""
-        # Mocking requests.get
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
@@ -152,13 +137,10 @@ class TestRetrieveArticles(unittest.TestCase):
             }
         }
 
-        # Patching requests.get with mock_response
         mock_get.return_value = mock_response
 
-        # Call the function under test
         articles = retrieve_articles('TEST')
 
-        # Assertions
         self.assertEqual(len(articles), 0)
 
     @patch('src.retrieve_articles.requests.get')
@@ -166,7 +148,6 @@ class TestRetrieveArticles(unittest.TestCase):
            return_value='test_api_key')
     def test_invalid_api_key(self, mock_retrieve_api_key, mock_get):
         """Test retrieve_articles with an invalid API key."""
-        # Mocking requests.get
         mock_response = Mock()
         mock_response.status_code = 403
         mock_response.json.return_value = {
@@ -175,10 +156,8 @@ class TestRetrieveArticles(unittest.TestCase):
             }
         }
 
-        # Patching requests.get with mock_response
         mock_get.return_value = mock_response
 
-        # Assertions
         with self.assertRaises(APIRequestError):
             retrieve_articles('TEST')
 
@@ -187,7 +166,6 @@ class TestRetrieveArticles(unittest.TestCase):
            return_value='test_api_key')
     def test_invalid_date_format(self, mock_retrieve_api_key, mock_get):
         """Test retrieve_articles with an invalid date format."""
-        # Mocking requests.get
         mock_response = Mock()
         mock_response.status_code = 400
         mock_response.json.return_value = {
@@ -196,10 +174,8 @@ class TestRetrieveArticles(unittest.TestCase):
             }
         }
 
-        # Patching requests.get with mock_response
         mock_get.return_value = mock_response
 
-        # Assertions
         with self.assertRaises(APIRequestError):
             retrieve_articles('TEST', 'invalid-date-format')
 
@@ -207,11 +183,11 @@ class TestRetrieveArticles(unittest.TestCase):
     @patch('src.retrieve_articles.retrieve_api_key',
            return_value='test_api_key')
     def test_network_error(self, mock_retrieve_api_key, mock_get):
-        """Test retrieve_articles with a network error."""
-        # Mocking requests.get to raise a ConnectionError
+        """Test retrieve_articles with a network error.
+        By mocking requests.get to raise a ConnectionError."""
+
         mock_get.side_effect = requests.exceptions.ConnectionError
 
-        # Assertions
         with self.assertRaises(APIRequestError):
             retrieve_articles('TEST', '2024-05-01')
 
@@ -219,10 +195,10 @@ class TestRetrieveArticles(unittest.TestCase):
     @patch('src.retrieve_articles.retrieve_api_key',
            return_value='test_api_key')
     def test_general_exception_handling(self, mock_retrieve_api_key, mock_get):
-        """Test retrieve_articles for general exception handling."""
-        # Mocking requests.get to raise a general exception
+        """Test retrieve_articles for general exception handling.
+        By mocking requests.get to raise a general exception.
+        """
         mock_get.side_effect = Exception('Unexpected error')
 
-        # Assertions
         with self.assertRaises(Exception):
             retrieve_articles('TEST')
