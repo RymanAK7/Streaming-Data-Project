@@ -3,9 +3,8 @@ from publish_to_kinesis import publish_to_kinesis
 import logging
 import json
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def lambda_handler(event, context):
     """
@@ -23,10 +22,15 @@ def lambda_handler(event, context):
                     f'Date ({from_date}), Kinesis stream ({kinesis_stream})'
                     )
         articles = retrieve_articles(search_term, from_date=from_date)
-        published = publish_to_kinesis(kinesis_stream, search_term, articles)
+        result, published_articles = publish_to_kinesis(
+            kinesis_stream, search_term, articles)
         response = {
             "statusCode": 200,
-            "body": json.dumps({'result': published}),
+            "body": json.dumps(
+                {'result': result, 'articles_published': (published_articles)},
+                indent=4,
+                ensure_ascii=False
+            )
         }
         logger.info(f'## Response returned: {response}')
         return response
@@ -36,3 +40,10 @@ def lambda_handler(event, context):
             "statusCode": 500,
             "body": json.dumps({'error': str(e)}),
         }
+
+print(lambda_handler({
+    'queryStringParameters':{
+        'kinesis_stream':'testhgf',
+        'search_term':'ch'
+    }
+},''))

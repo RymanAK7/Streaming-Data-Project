@@ -38,7 +38,7 @@ def test_lambda_handler_valid_params(
     }
     context = {}
     response = lambda_handler(event, context)
-    assert response['statusCode'] == 200
+    assert (response['statusCode']) == 200
     assert 'result' in response['body']
 
 
