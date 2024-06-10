@@ -20,7 +20,6 @@ def test_lambda_handler_valid_params(
     """
     Test Lambda handler with valid parameters.
     """
-    # Mock the return value of retrieve_articles
     mock_retrieve_articles.return_value = [
         {
             "webPublicationDate": "2024-05-01T12:00:00Z",
