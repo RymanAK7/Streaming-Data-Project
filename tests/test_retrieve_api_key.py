@@ -23,7 +23,7 @@ def secrets_client(aws_credentials):
 
 
 def test_retrieve_api_key_returns_secret_string(secrets_client):
-    """check retrieve_credentials function always return
+    """check retrieve_credentials function always returns
     a string"""
 
     secrets_client.create_secret(
