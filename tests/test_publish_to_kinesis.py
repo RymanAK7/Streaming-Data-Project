@@ -51,7 +51,7 @@ def test_publish_to_kinesis_adds_all_articles_to_stream(aws_kinesis):
     """
     partition_key = 'test-search'
     stream_name = "test_stream"
-    output = publish_to_kinesis(stream_name, partition_key, articles)
+    output = publish_to_kinesis(stream_name, partition_key, articles)[0]
 
     assert output == (
         f"Successfully added all {len(articles)} records "
