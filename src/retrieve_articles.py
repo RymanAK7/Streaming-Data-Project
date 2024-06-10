@@ -1,7 +1,8 @@
 import requests
-from retrieve_api_key import retrieve_api_key
-from fetch_article_content import fetch_content_preview
+from src.retrieve_api_key import retrieve_api_key
+from src.fetch_article_content import fetch_content_preview
 import logging
+from typing import List, Dict, Union
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -11,7 +12,8 @@ class APIRequestError(Exception):
     pass
 
 
-def retrieve_articles(search_terms: str, from_date: str = None) -> list:
+def retrieve_articles(
+        search_terms: str, from_date: str = None) -> Union[str, List[Dict]]:
     """
     Retrieves articles from the Guardian API based on search terms and date.
 
@@ -19,7 +21,7 @@ def retrieve_articles(search_terms: str, from_date: str = None) -> list:
         search_terms (str): The search terms to query.
         from_date (str, optional): The start date for the search
         in YYYY-MM-DD format. If not provided, defaults to None,
-        in which case recent articles will be retrieved
+        in which case most relevant articles will be retrieved
 
     Returns:
         list: A list of dictionaries containing
@@ -61,11 +63,9 @@ def retrieve_articles(search_terms: str, from_date: str = None) -> list:
             raise APIRequestError(
                 f'Error {response.status_code} : {error_message}')
     except requests.exceptions.RequestException as e:
-        # Catch request-specific errors
         logger.error(f'Request failed: {e}')
         raise APIRequestError(f'Request failed: {e}')
     except Exception as e:
-        # Catch other errors like invalid API key, etc.
         logger.error(f'An unexpected error occurred: {e}')
         raise
     return article_hits_info
