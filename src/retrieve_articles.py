@@ -48,13 +48,16 @@ def retrieve_articles(
             article_hits_info = []
             articles = data['response']['results']
             for article in articles:
+                try:
+                    content_preview = fetch_content_preview(article['webUrl'])
+                except Exception as e:
+                    logger.error(f'Failed to fetch content preview: {e}')
+                    content_preview = 'Content preview not available'
                 article_info = {
                     'webPublicationDate': article['webPublicationDate'],
                     'webTitle': article['webTitle'],
                     'webUrl': article['webUrl'],
-                    'contentPreview': fetch_content_preview(
-                        article['webUrl']
-                    ) + '...'
+                    'contentPreview': content_preview + '...'
                 }
                 article_hits_info.append(article_info)
         else:
@@ -67,5 +70,5 @@ def retrieve_articles(
         raise APIRequestError(f'Request failed: {e}')
     except Exception as e:
         logger.error(f'An unexpected error occurred: {e}')
-        raise
+        raise APIRequestError(f'An unexpected error occurred: {e}')
     return article_hits_info
