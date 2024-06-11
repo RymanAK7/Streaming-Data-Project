@@ -59,7 +59,7 @@ def publish_to_kinesis(stream_name: str, partition_key: str,
         if success_count == 0:
             return (
                 f"Failed to add any records to Kinesis stream: {stream_name}"
-            )
+            ), published_articles
         elif success_count < len(list_articles):
             return (
                 f"Only added {success_count} out of {len(list_articles)} "
