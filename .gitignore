@@ -1,2 +1,17 @@
+# Python related
 venv/
 __pycache__/
+
+# Local .terraform directories
+**/.terraform/*
+infrastructure/.terraform
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+# terraform.tfvars # Exclude this if it contains sensitive information
+
+# Package files
+package
+*.zip
+
