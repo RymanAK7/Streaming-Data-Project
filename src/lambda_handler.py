@@ -3,8 +3,8 @@ from src.publish_to_kinesis import publish_to_kinesis
 import logging
 import json
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
@@ -27,8 +27,11 @@ def lambda_handler(event, context):
             kinesis_stream, search_term, articles)
         response = {
             "statusCode": 200,
+            "headers": {
+                "Content-Type": "application/json; charset=utf-8"
+            },
             "body": json.dumps(
-                {'result': result, 'articles_published': (published_articles)},
+                {'result': result, 'articles_published': published_articles},
                 indent=4,
                 ensure_ascii=False
             )
