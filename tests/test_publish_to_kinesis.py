@@ -78,7 +78,7 @@ def test_publish_to_kinesis_no_records_added_failure(aws_kinesis):
     """Test that publish_to_kinesis function
     handles failure when no articles are added."""
     stream_name = "test_stream"
-    output = publish_to_kinesis(stream_name, "test_search", [])
+    output = publish_to_kinesis(stream_name, "test_search", [])[0]
     assert output == (
         f"Failed to add any records to Kinesis stream: {stream_name}"
     )
