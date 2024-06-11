@@ -73,16 +73,16 @@ To set up and use the project, follow these steps:
 6. **Populate the AccountId and Kinesis Stream Name:**
     In the file `terraform.tfvars`, put in your account ID and the Kinesis stream name you want to publish the article information to. You can find your account ID by clicking in the top right corner of the AWS console.
 
-7. **Apply Terraform:**
+7. **Plan Terraform:**
     ```bash
-    terraform apply
+    terraform plan
     ```
-    Upon running the `terraform apply` command, Terraform will prompt you with the actions it intends to perform. Only 'yes' will be accepted to approve. Enter 'yes' to proceed with the deployment.
 
 8. **Apply Terraform:**
     ```bash
     terraform apply
     ```
+    Upon running the `terraform apply` command, Terraform will prompt you with the actions it intends to perform. Only 'yes' will be accepted to approve. Enter 'yes' to proceed with the deployment.
 
 9. **Invoke the API:**
     Go to the URL output by Terraform. The default query is:
