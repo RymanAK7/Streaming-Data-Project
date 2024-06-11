@@ -38,7 +38,7 @@ To set up and use the project, follow these steps:
 
 1. **Clone the project repository:**
     ```bash
-    git clone <repository_url>
+    git clone https://github.com/RymanAK7/Streaming-Data-Project.git
     cd streaming-data-project
     ```
 
@@ -62,7 +62,7 @@ To set up and use the project, follow these steps:
     export AWS_ACCESS_KEY_ID=put_your_key_here
     export AWS_SECRET_ACCESS_KEY=put_your_secret_here
     ```
-    
+
 5. **Initialize Terraform:**
     Make sure you're inside the `infrastructure` folder.
     ```bash
