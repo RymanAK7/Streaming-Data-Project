@@ -53,7 +53,7 @@ To set up and use the project, follow these steps:
     cd infrastructure/package
     zip -r ../my-deployment-package.zip .
     cd ..
-    zip my-deployment-package.zip ../src
+    zip -r my-deployment-package.zip ../src  
     ```
 
 4. **Ensure your AWS credentials are configured:**
