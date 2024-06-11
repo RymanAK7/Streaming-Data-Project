@@ -70,11 +70,11 @@ run-format:
 
 ## Run a single test
 unit-test:
-	$(call execute_in_env, PYTHONPATH=${PYTHONPATH}:src pytest -v ${test_run})
+	$(call execute_in_env, PYTHONPATH=${PYTHONPATH}:src pytest -v tests/${test_run})
 
 ## Run all the unit tests
 unit-tests:
-	$(call execute_in_env, PYTHONPATH=$(PYTHONPATH):src pytest -v)
+	$(call execute_in_env, PYTHONPATH=$(PYTHONPATH):src pytest -v tests/)
 
 ## Run all checks
 run-checks: run-flake unit-tests
