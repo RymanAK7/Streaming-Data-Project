@@ -31,7 +31,7 @@ class TestRetrieveArticles(unittest.TestCase):
                 ]
             }
         }
-
+        mock_response.url = 'http://example.com'
         mock_get.return_value = mock_response
 
         with patch(
@@ -97,7 +97,7 @@ class TestRetrieveArticles(unittest.TestCase):
                 ]
             }
         }
-
+        mock_response.url = 'http://example.com'
         mock_get.return_value = mock_response
 
         with patch(
@@ -136,7 +136,7 @@ class TestRetrieveArticles(unittest.TestCase):
                 'results': []
             }
         }
-
+        mock_response.url = 'http://example.com'
         mock_get.return_value = mock_response
 
         articles = retrieve_articles('TEST')

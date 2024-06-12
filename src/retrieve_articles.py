@@ -1,6 +1,6 @@
 import requests
-from src.retrieve_api_key import retrieve_api_key
-from src.fetch_article_content import fetch_content_preview
+from retrieve_api_key import retrieve_api_key
+from fetch_article_content import fetch_content_preview
 import logging
 from typing import List, Dict, Union
 
@@ -36,12 +36,11 @@ def retrieve_articles(
             'api-key': retrieve_api_key('guardian/api-key'),
         }
         logger.info('Making a request to the Guardian API.')
-        base_url = "http://content.guardianapis.com/search"
-        params = f'order-by=relevance&q={search_terms}'
-        if from_date:
-            params = f'from-date={from_date}&{params}'
-        logger.info(f'Request URL: {base_url}?{params}')
         response = requests.get(url, params=my_params)
+        api_key_marker = 'api-key'
+        api_key_index = response.url.find(api_key_marker)
+        logger.info(
+            f'Request URL: {response.url[:api_key_index]}api-key=[REDACTED]')
         data = response.json()
         if response.status_code == 200:
             logger.info('Request was successful')
