@@ -1,5 +1,17 @@
 # Streaming Data Project
 
+## Technologies Used
+- ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white): Main programming language for the application.
+- ![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white): AWS Services:
+  - ![API Gateway](https://img.shields.io/badge/AWS%20API%20Gateway-FF4F8B?style=for-the-badge&logo=amazon-aws&logoColor=white): Provides a RESTful interface for invoking the Lambda function.
+  - ![Lambda](https://img.shields.io/badge/AWS%20Lambda-FF9900?style=for-the-badge&logo=aws-lambda&logoColor=white): Implements the main functionality of the application.
+  - ![Secrets Manager](https://img.shields.io/badge/AWS%20Secrets%20Manager-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white): Stores the Guardian API key securely.
+  - ![CloudWatch](https://img.shields.io/badge/AWS%20CloudWatch-FF4F8B?style=for-the-badge&logo=amazon-aws&logoColor=white): Used for logging and monitoring.
+  - ![Kinesis](https://img.shields.io/badge/AWS%20Kinesis-FF9900?style=for-the-badge&logo=amazon-kinesis&logoColor=white): Receives and stores the published article information for further processing by downstream applications.
+- ![Terraform](https://img.shields.io/badge/Terraform-623CE4?style=for-the-badge&logo=terraform&logoColor=white): Infrastructure provisioning and management.
+- ![Makefile](https://img.shields.io/badge/Makefile-1C1E24?style=for-the-badge&logo=gnu-make&logoColor=white): Automation for common tasks such as environment setup and running tests.
+
+
 ## Overview
 This project implements an application to retrieve articles from the Guardian API based on a search term and an optional `from_date` field, process them, and post details of up to ten hits to the message broker, the AWS Kinesis stream. The application is built using Python, AWS services, Terraform for infrastructure management, and a Makefile for automation.
 
