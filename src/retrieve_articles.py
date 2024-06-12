@@ -13,12 +13,12 @@ class APIRequestError(Exception):
 
 
 def retrieve_articles(
-        search_terms: str, from_date: str = None) -> Union[str, List[Dict]]:
+        search_term: str, from_date: str = None) -> Union[str, List[Dict]]:
     """
-    Retrieves articles from the Guardian API based on search terms and date.
+    Retrieves articles from the Guardian API based on search term and date.
 
     Args:
-        search_terms (str): The search terms to query.
+        search_term (str): The search term to query.
         from_date (str, optional): The start date for the search
         in YYYY-MM-DD format. If not provided, defaults to None,
         in which case most relevant articles will be retrieved
@@ -32,7 +32,7 @@ def retrieve_articles(
         my_params = {
             'from-date': from_date,
             'order-by': 'relevance',
-            'q': search_terms,
+            'q': search_term,
             'api-key': retrieve_api_key('guardian/api-key'),
         }
         logger.info('Making a request to the Guardian API.')
