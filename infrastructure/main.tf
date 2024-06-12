@@ -176,3 +176,9 @@ resource "aws_api_gateway_stage" "example" {
   rest_api_id   = aws_api_gateway_rest_api.example_api.id
   stage_name    = "dev"
 }
+
+resource "aws_kinesis_stream" "example_stream" {
+  name             = var.kinesis_stream_name
+  shard_count      = 4  
+  retention_period = 72 # Data persisited in message broker for no longer than 3 days
+}
