@@ -1,6 +1,6 @@
 import requests
-from retrieve_api_key import retrieve_api_key
-from fetch_article_content import fetch_content_preview
+from src.retrieve_api_key import retrieve_api_key
+from src.fetch_article_content import fetch_content_preview
 import logging
 from typing import List, Dict, Union
 
