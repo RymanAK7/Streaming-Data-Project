@@ -1,4 +1,6 @@
-# Python related
+# .gitignore
+
+# Local virtual environment directories
 venv/
 __pycache__/
 
@@ -10,6 +12,9 @@ infrastructure/.terraform
 *.tfstate
 *.tfstate.*
 # terraform.tfvars # Exclude this if it contains sensitive information
+
+# Terraform lock file
+.terraform.lock.hcl
 
 # Package files
 package
