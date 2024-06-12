@@ -1,7 +1,7 @@
 # Streaming Data Project
 
 ## Overview
-This project implements an application to retrieve articles from the Guardian API based on a search term and an optional `from_date` field, process them, and post details of up to ten hits to the message broker, the AWS Kinesis stream. The application is built using Python, AWS services, Terraform for infrastructure management, and a Makefile for automation.
+This project implements an application to retrieve articles from the Guardian API based on a search term and an optional `from_date` field, process them, and post details of up to ten hits to the message broker, the AWS Kinesis stream where the data will have a retention period of 3 days. The application is built using Python, AWS services, Terraform for infrastructure management, and a Makefile for automation.
 
 ## Components
 - **AWS Secrets Manager**: Used to securely store the Guardian API key.
@@ -27,7 +27,7 @@ The Lambda function consists of four main components:
     ```
 
 ## Deployment
-- **Terraform**: Automates the provisioning of AWS resources such as API Gateway, Lambda function, and associated configurations.
+- **Terraform**: Automates the provisioning of AWS resources such as API Gateway, Lambda function, Kinesis stream creation and associated configurations.
 - **AWS Secrets Manager**: Stores the Guardian API key securely.
 - **AWS API Gateway**: Provides a public-facing endpoint for invoking the Lambda function.
 - **AWS Kinesis**: Receives and stores the published article information for further processing by downstream applications.
@@ -63,28 +63,45 @@ To set up and use the project, follow these steps:
     export AWS_SECRET_ACCESS_KEY=put_your_secret_here
     ```
 
-5. **Initialize Terraform:**
+5. **Create Secret in AWS Secrets Manager:**
+    - **Using AWS Management Console:**
+        - Navigate to the AWS Management Console and open the Secrets Manager service.
+        - Click on the "Store a new secret" button.
+        - Choose "Other type of secrets" and then "Plaintext" as the secret type.
+        - Enter `guardian/api-key` as the name for the secret.
+        - Input the Guardian API key in the secret value field.
+        - Review the configuration and click "Next".
+        - Review again and click "Store".
+    
+    - **Using AWS Command Line Interface (CLI):**
+        - Run the following command, replacing `<your-api-key>` with your Guardian API key:
+            ```bash
+            aws secretsmanager create-secret --name guardian/api-key --secret-string <your-api-key>
+            ```
+        - This command creates a secret named `guardian/api-key` with the specified Guardian API key.
+
+6. **Initialize Terraform:**
     Make sure you're inside the `infrastructure` folder.
     ```bash
     cd infrastructure
     terraform init
     ```
 
-6. **Populate the AccountId and Kinesis Stream Name:**
-    In the file `terraform.tfvars`, put in your account ID and the Kinesis stream name you want to publish the article information to. You can find your account ID by clicking in the top right corner of the AWS console.
+7. **Populate the AccountId and Kinesis Stream Name:**
+    In the terraform.tfvars file, provide your AWS Account ID and specify the desired name for the Kinesis stream where article information will be published. You can find your Account ID by navigating to the top right corner of the AWS Management Console. Ensure the Kinesis stream name aligns with your project's naming conventions and requirements. This stream will be created by Terraform during deployment.
 
-7. **Plan Terraform:**
+8. **Plan Terraform:**
     ```bash
     terraform plan
     ```
 
-8. **Apply Terraform:**
+9. **Apply Terraform:**
     ```bash
     terraform apply
     ```
     Upon running the `terraform apply` command, Terraform will prompt you with the actions it intends to perform. Only 'yes' will be accepted to approve. Enter 'yes' to proceed with the deployment.
 
-9. **Invoke the API:**
+10. **Invoke the API:**
     Go to the URL output by Terraform. The default query is:
     ```
     ?search_term=Python&kinesis_stream=test_stream&from_date=2024-01-01
@@ -101,21 +118,20 @@ To set up and use the project, follow these steps:
 
     - `debate AND economy`: Returns only content that contains both "debate" and "economy".
     - `debate AND NOT immigration`: Returns only content that contains "debate" but does not contain "immigration".
-      - Example: [Search Link](https://content.guardianapis.com/search?q=debate%20AND%20NOT%20immigration&tag=politics/politics&from-date=2014-01-01&api-key=test)
-
+     
     The AND operator has a higher precedence than OR, but you can use parentheses to override this behavior. For example:
 
     - `debate AND (economy OR immigration OR education)`: Returns only content that contains both "debate" and at least one of the following: "economy", "immigration", "education".
 
     Note that OR is the default operator, so you can omit it if you like. `debate AND (economy immigration education)` will behave the same as the above query.
 
-10. **Check the API response:**
+11. **Check the API response:**
     The response from the API Gateway will show the article information that was added to the Kinesis stream.
 
-11. **Monitor logs:**
+12. **Monitor logs:**
     You can monitor the execution logs of the Lambda function in AWS CloudWatch to ensure the function is running correctly and to debug any issues.
 
-12. **Clean up resources:**
+13. **Clean up resources:**
     ```bash
     terraform destroy
     ```
