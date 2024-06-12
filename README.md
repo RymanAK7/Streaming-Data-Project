@@ -91,18 +91,23 @@ To set up and use the project, follow these steps:
     ```
     You can change the `search_term`, `kinesis_stream`, and `from_date` parameters as needed.
 
-    You can also use filter operators in the search term, for example:
+    You can also use query operators in the search term. For example:
     ```
-    search_term=Football|Programming
+    search_term=Football AND Chelsea
     ```
-    This query will give you articles about football or programming.
+    This query will give you articles about Chelsea Football Club.
 
-    Some filters support AND, OR, and NOT operators through specific syntax:
-    - AND: `,`
-    - OR: `|`
-    - NOT: `-`
+    The `search_term` parameter supports AND, OR, and NOT operators. For example:
 
-    Expressions can be grouped using parentheses `()`.
+    - `debate AND economy`: Returns only content that contains both "debate" and "economy".
+    - `debate AND NOT immigration`: Returns only content that contains "debate" but does not contain "immigration".
+      - Example: [Search Link](https://content.guardianapis.com/search?q=debate%20AND%20NOT%20immigration&tag=politics/politics&from-date=2014-01-01&api-key=test)
+
+    The AND operator has a higher precedence than OR, but you can use parentheses to override this behavior. For example:
+
+    - `debate AND (economy OR immigration OR education)`: Returns only content that contains both "debate" and at least one of the following: "economy", "immigration", "education".
+
+    Note that OR is the default operator, so you can omit it if you like. `debate AND (economy immigration education)` will behave the same as the above query.
 
 10. **Check the API response:**
     The response from the API Gateway will show the article information that was added to the Kinesis stream.
@@ -114,3 +119,4 @@ To set up and use the project, follow these steps:
     ```bash
     terraform destroy
     ```
+    
